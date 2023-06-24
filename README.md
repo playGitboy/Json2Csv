@@ -16,7 +16,7 @@ Usage of main.exe:
 ### *数据位于根/一级节点下*
 ```json
 [{"ID":0,"Name":"Lucy","Age":17,"Granted":true},{"ID":1,"Name":"Lily","Age":20,"Granted":false}]
-或者
+
 {"part":1,"items":[{"title":"one","price":23},{"title":"two","price":92},{"title":"three","price":5623}]}
 ```
 数据提取命令：`Json2Csv test1.json test2.json`
