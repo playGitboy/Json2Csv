@@ -13,7 +13,7 @@ Usage of main.exe:
 ```  
 
 支持以下常见JSON数据格式：  
-### *数据位于根/一级节点下*
+### 1.*数据位于根/一级节点下*
 ```json
 [{"ID":0,"Name":"Lucy","Age":17,"Granted":true},{"ID":1,"Name":"Lily","Age":20,"Granted":false}]
 
@@ -21,7 +21,7 @@ Usage of main.exe:
 ```
 数据提取命令：`Json2Csv test1.json test2.json`
 > 拖放json文件到主程序或命令行均可运行，如JSON数据位于根/一级节点下程序可自动检测并提取
-### *数据位于任意多级节点下*
+### 2.*数据位于任意多级节点下*
 ```json
 {"data":{"items":[{"title":"one","price":23},{"title":"two","price":92},{"title":"three","price":5623}]}}
 ```
