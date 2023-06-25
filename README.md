@@ -32,8 +32,8 @@ Usage of Json2Csv.exe:
 ### 3.*手动提取多级节点下的对象数据*  
 ```json
 {"part":1,"data":{"items":{"1":{"title":"one","name":"test1"},"2":{"title":"two","name":"test2"},{"3":{"title":"three","name":"test3"}}}}
-```
-注意此时数据区域不是一个数组结构而是一个对象，此时也可以提取所有"titile/name"
+```  
+注意此时数据区域不是一个数组结构而是一个对象，此时也可以提取所有"titile/name"  
 数据提取命令：`Json2Csv -k data.items test.json`  
 
 # 编译依赖
