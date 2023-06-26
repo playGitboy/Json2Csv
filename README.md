@@ -50,3 +50,6 @@ Usage of Json2Csv.win.amd64.exe:
 
 # 编译依赖
 Golang 1.18+
+
+# 系统支持  
+windows7+/MacOs/Linux...
