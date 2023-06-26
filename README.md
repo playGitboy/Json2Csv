@@ -1,5 +1,5 @@
 # Json2Csv
-Golang实现的一款通用型JSON数据提取工具，支持自动识别JSON数据节点并有序提取为CSV文件，基本涵盖常见所有JSON结构数据提取。  
+Golang实现的一款通用型JSON数据提取工具，支持自动识别JSON数据节点并有序提取为CSV文件，基本涵盖所有JSON结构数据提取。  
 Convenient JSON data extraction tool.
 
 # 使用简介
@@ -42,10 +42,10 @@ Usage of Json2Csv.win.amd64.exe:
 ```json
 {"status":"ok","data":{"list":[{"uuid":"0DC0002B","title":"前言","is_chapter":1},{"uuid":"8743CB8D","title":"前言讲义","type":"document","length":90,"weight":1,"media_uri":"a6283c64\/document\/BrDM.doc","course_title":"2016年司考","is_chapter":0}]}}
 ```
-类似这种非标准json，直接用-d data.list解析数据默认从第1个数据块读取字段即uuid/title/is_chapter，导致生成的csv文件缺失大量数据，此时可以设置"-i 2"参数指定从第2个数据块以解析全部字段即uuid/title/type/length/weight/media_uri/course_title/is_chapter  
+类似这种非标准json，直接用`-d data.list`解析数据默认从第1个数据块读取字段即`uuid/title/is_chapter`，导致生成的csv文件缺失大量数据，此时可以设置"-i 2"参数指定从第2个数据块以解析全部字段即`uuid/title/type/length/weight/media_uri/course_title/is_chapter`  
 数据提取命令：`Json2Csv -d data.items -i 2 test.json`  
 
-也可以使用"-k title/media_uri/course_title"参数手动设置待读取的字段名称，这样导出的数据将只包含title/media_uri/course_title几列  
+也可以使用`-k title/media_uri/course_title`参数手动设置待读取的字段名称，这样导出的数据将只包含`title/media_uri/course_title`几列  
 数据提取命令：`Json2Csv -d data.items -k title/media_uri/course_title test.json`  
 
 # 编译依赖
