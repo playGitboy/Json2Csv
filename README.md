@@ -40,7 +40,7 @@ Usage of Json2Csv.win.amd64.exe:
 数据提取命令：`Json2Csv -d data.items test.json`  
 ### 4.*支持手动指定字段名/自动从第N个数据块读取字段名*
 ```json
-{"status":"ok","data":{"list":[{"uuid":"0DC0002B","title":"前言","is_chapter":1},{"uuid":"8743CB8D","title":"前言讲义","type":"document","length":90,"weight":1,"media_uri":"a6283c64\/document\/BrDM.doc","course_title":"2016年司考","is_chapter":0}}}
+{"status":"ok","data":{"list":[{"uuid":"0DC0002B","title":"前言","is_chapter":1},{"uuid":"8743CB8D","title":"前言讲义","type":"document","length":90,"weight":1,"media_uri":"a6283c64\/document\/BrDM.doc","course_title":"2016年司考","is_chapter":0}]}}
 ```
 有些json不太标准，类似上面这种直接用`-k data.list`解析出的数据默认会从第1个数据块读取字段即uuid/title/is_chapter，导致生成的csv文件缺失大量数据，此时可以设置"-i 2"参数指定从第2个数据块读取解析全部字段  
 数据提取命令：`Json2Csv -d data.items -i 2 test.json`  
