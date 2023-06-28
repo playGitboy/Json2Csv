@@ -10,7 +10,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
-  "strconv"
+    "strconv"
 
 	"github.com/ecoshub/jin"
 	"github.com/gogf/gf/container/gmap"
@@ -48,6 +48,7 @@ func writeObjToCSVFile(obj []string, csvHeader []string, outputFileName string) 
 		return err
 	}
 	defer file.Close()
+	file.WriteString("\xEF\xBB\xBF")
 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
@@ -95,6 +96,7 @@ func writeArrayToCSVFile(listMap *gmap.ListMap, node string, csvHeader []string,
 		return err
 	}
 	defer file.Close()
+	file.WriteString("\xEF\xBB\xBF")
 
 	writer := csv.NewWriter(file)
 	defer writer.Flush()
