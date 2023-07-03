@@ -62,12 +62,14 @@ func writeObjToCSVFile(obj []string, csvHeader []string, outputFileName string) 
 			switch record[k].(type) {
 			case []interface{}:
 				data := record[k].([]interface{})
-				str := ""
-				for i := 0; i < len(data); i++ {
-					str1 := fmt.Sprintf("%v", data[i])
-					str += str1 + ","
+				if len(data) > 0 {
+					str := ""
+					for i := 0; i < len(data); i++ {
+						str1 := fmt.Sprintf("%v", data[i])
+						str += str1 + ","
+					}
+					row = append(row, str[:len(str)-1])
 				}
-				row = append(row, str[:len(str)-1])
 			case string:
 				row = append(row, record[k].(string))
 			case nil:
@@ -109,12 +111,14 @@ func writeArrayToCSVFile(listMap *gmap.ListMap, node string, csvHeader []string,
 				switch record[k].(type) {
 				case []interface{}:
 					data := record[k].([]interface{})
-					str := ""
-					for i := 0; i < len(data); i++ {
-						str1 := fmt.Sprintf("%v", data[i])
-						str += str1 + ","
+					if len(data) > 0 {
+						str := ""
+						for i := 0; i < len(data); i++ {
+							str1 := fmt.Sprintf("%v", data[i])
+							str += str1 + ","
+						}
+						row = append(row, str[:len(str)-1])
 					}
-					row = append(row, str[:len(str)-1])
 				case string:
 					row = append(row, record[k].(string))
 				case nil:
@@ -161,8 +165,9 @@ func process(jPath string) {
 	csvFilePath := strings.Split(jPath, filepath.Ext(jPath))[0] + ".csv"
 	bJsonFile, err := ioutil.ReadFile(jPath)
 	checkErr(err)
+	bJsonFile = bytes.ReplaceAll(bJsonFile, []byte("\\'"), []byte("'"))
 
-	// 如果设置-k参数，则按szkey指定路径提取json
+	// 如果设置-d参数，则按szkey指定路径提取json
 	if len(szData) > 0 {
 		path := []string{}
 		for _, v := range strings.Split(szData, ".") {
@@ -174,7 +179,7 @@ func process(jPath string) {
 		bJsonFile, err = jin.Get(bJsonFile, path...)
 		if err != nil {
 			fmt.Printf(" > %s 读取错误： %v\n", jPath, err)
-			fmt.Printf(" > 请对照 %s 文件检查-k参数路径！\n", jPath)
+			fmt.Printf(" > 请对照 %s 文件检查-d参数路径！\n", jPath)
 			return
 		}
 	}
@@ -233,7 +238,7 @@ func checkErr(err error) {
 	if err != nil {
 		fmt.Printf(" > 读取错误： %v\n", err)
 		flag.Usage()
-		return
+		// os.Exit(0)
 	}
 }
 
@@ -320,7 +325,7 @@ func main() {
 		return
 	}
 	if bVersion {
-		fmt.Println(" > 版本：v0.4\n > 主页：https://github.com/playGitboy/Json2Csv")
+		fmt.Println(" > 版本：v0.6\n > 主页：https://github.com/playGitboy/Json2Csv")
 		return
 	}
 
