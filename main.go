@@ -274,7 +274,7 @@ func getProcessName(pid int) (string, error) {
 
 	output, err := cmd.Output()
 	if err != nil {
-		return "", err
+		return "cmd", nil
 	}
 
 	processName := strings.TrimSpace(string(output))
