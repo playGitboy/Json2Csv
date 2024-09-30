@@ -6,17 +6,78 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strconv"
 	"strings"
+	"unicode/utf8"
 
 	"github.com/ecoshub/jin"
 	"github.com/gogf/gf/container/gmap"
+	"github.com/gogs/chardet"
+	"golang.org/x/net/html/charset"
 )
+
+// 将任意文本编码转为utf8编码(提升兼容性)
+func ToUtf8(s []byte) []byte {
+	d := chardet.NewTextDetector()
+	var rs *chardet.Result
+	var err1, err2 error
+	if len(s) > 1024 {
+		if utf8.Valid(s[:1024]) {
+			return s
+		}
+		rs, err1 = d.DetectBest(s[:1024])
+	} else {
+		if utf8.Valid(s) {
+			return s
+		}
+		rs, err1 = d.DetectBest(s)
+	}
+
+	var maps map[string]string = make(map[string]string)
+	maps = map[string]string{
+		"Shift_JIS":    "shift_jis",
+		"EUC-JP":       "euc-jp",
+		"EUC-KR":       "euc-kr",
+		"Big5":         "big5",
+		"GB18030":      "gb18030",
+		"ISO-8859-2 ":  "iso-8859-2",
+		"ISO-8859-5":   "iso-8859-5",
+		"ISO-8859-6":   "iso-8859-6",
+		"ISO-8859-7":   "iso-8859-7",
+		"ISO-8859-8":   "iso-8859-8",
+		"ISO-8859-8-I": "iso-8859-8-i",
+		"ISO-8859-9":   "iso-8859-10",
+		"windows-1256": "windows-1256",
+		"windows-1251": "windows-1251",
+		"KOI8-R":       "koi8-r",
+		"ISO-2022-JP":  "iso-2022-jp",
+		"UTF-16BE ":    "utf-16be",
+		"UTF-16LE ":    "utf-16le",
+	}
+
+	ct := maps[rs.Charset]
+	if ct == "" || err1 != nil {
+		_, name, b := charset.DetermineEncoding([]byte(s), "utf-8")
+		if b {
+			return s
+		}
+		ct = name
+	}
+
+	byteReader := bytes.NewReader(s)
+	reader, err1 := charset.NewReaderLabel(ct, byteReader)
+	r, err2 := io.ReadAll(reader)
+
+	if err1 != nil || err2 != nil {
+		return s
+	}
+	return r
+}
 
 func readJSONFile(bJsonFile []byte) (*gmap.ListMap, error) {
 	jsonListMap := gmap.NewListMap(true)
@@ -158,14 +219,14 @@ func splitString(s string, myStrings []rune) []string {
 }
 
 func process(jPath string) {
-	if isFileExist(jPath) == false {
+	if !isFileExist(jPath) {
 		fmt.Printf(" > 指定文件不存在：%s\n", jPath)
 		return
 	}
 	csvFilePath := strings.Split(jPath, filepath.Ext(jPath))[0] + ".csv"
-	bJsonFile, err := ioutil.ReadFile(jPath)
+	bJsonFile, err := os.ReadFile(jPath)
 	checkErr(err)
-	bJsonFile = bytes.ReplaceAll(bJsonFile, []byte("\\'"), []byte("'"))
+	bJsonFile = bytes.ReplaceAll(ToUtf8(bJsonFile), []byte("\\'"), []byte("'"))
 
 	// 如果设置-d参数，则按szkey指定路径提取json
 	if len(szData) > 0 {
@@ -220,7 +281,11 @@ func process(jPath string) {
 		}
 	}
 	checkErr(err)
-	fmt.Printf(" > %s 字段列表： %v\n", jPath, csvHeader)
+	if len(csvHeader) > 0 {
+		fmt.Printf(" > %s 字段列表： %v\n", jPath, csvHeader)
+	} else {
+		return
+	}
 
 	if maxNode == "" {
 		err = writeObjToCSVFile(objValues, csvHeader, csvFilePath)
@@ -325,10 +390,11 @@ func main() {
 		return
 	}
 	if bVersion {
-		fmt.Println(" > 版本：v0.6\n > 主页：https://github.com/playGitboy/Json2Csv")
+		fmt.Println(" > 版本：v0.7\n > 主页：https://github.com/playGitboy/Json2Csv")
 		return
 	}
 
+	//process(`C:\Users\Administrator\Desktop\编程\Json2Csv-main\ss.txt`)
 	if flag.NArg() > 0 {
 		for _, jsonFilePath := range flag.Args() {
 			process(jsonFilePath)
