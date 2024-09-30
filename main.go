@@ -394,7 +394,6 @@ func main() {
 		return
 	}
 
-	//process(`C:\Users\Administrator\Desktop\编程\Json2Csv-main\ss.txt`)
 	if flag.NArg() > 0 {
 		for _, jsonFilePath := range flag.Args() {
 			process(jsonFilePath)
